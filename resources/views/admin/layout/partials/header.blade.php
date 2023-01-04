@@ -61,7 +61,7 @@
           @endif
         </a>
           <div class="dropdown-menu dropdown-menu-right">
-            <a href="#"  class="dropdown-item"><i class="fas fa-lock mr-2"></i> @lang('admin.TITLE_CHANGE_PASSWORD_MODULE')</a>
+            <a href="#" id="changePasswordfrm" data-toggle="modal" data-target="#updateUserPassword" onclick="document.getElementById('updateUserPasswordForm').reset()" class="dropdown-item" ><i class="fas fa-lock mr-2"></i> @lang('admin.TITLE_CHANGE_PASSWORD_MODULE')</a>
             <a href="{{ route('admin.logout') }}" class="dropdown-item"><i class="fas fa-sign-out-alt mr-2"></i> @lang('admin.TITLE_BUTTON_LOGOUT')</a>
           </div>
       </li>

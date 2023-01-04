@@ -33,6 +33,8 @@ Route::get('/', function () {
     Route::group(['middleware' => ['AdminAuthenticate']],function(){
 
     Route::get('logout',[AuthController::class,'logout'])->name('logout');
+
+    Route::post('updatePassword',[AuthController::class,'updatePassword'])->name('updatePassword');
     
     //admin dashboard
     Route::get('dashboard',[DashboardController::class,'index'])->name('dashboard');

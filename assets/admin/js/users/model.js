@@ -59,22 +59,18 @@ $('#updateUserPasswordForm').validator().on('submit', function (e)
       const $this    = $(this); 
       const action   = $this.attr('action');
       const formData = new FormData($this[0]); 
-
       $($this).closest('.modal-content').LoadingOverlay("show", {
          background  : "rgba(165, 190, 100, 0.2)",
       });
-
       axios.post(action,formData)
       .then(function (response) 
       {
          const resp =  response.data;
-
          if (resp.status == 'success') 
          {
             $this[0].reset();
             toastr.success(resp.msg);
             $($this).closest('.modal-content').LoadingOverlay("hide");
-
             setTimeout(function()
             {
                $('#updateUserPassword').modal('hide');
@@ -90,7 +86,6 @@ $('#updateUserPasswordForm').validator().on('submit', function (e)
       .catch(function (error) 
       {
          $($this).closest('.modal-content').LoadingOverlay("hide");
-
          const errorBag = error.response.data.errors;
          $.each(errorBag, function(fieldName, value) 
          {
@@ -98,7 +93,6 @@ $('#updateUserPasswordForm').validator().on('submit', function (e)
             $('.err_'+fieldName).text(value[0]).closest('span').show(); 
          })
       }); 
-
       return false;
    }
 })

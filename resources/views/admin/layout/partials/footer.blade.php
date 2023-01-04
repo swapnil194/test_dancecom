@@ -7,8 +7,25 @@
     </div>
     <strong>@lang('admin.TITLE_SITE_COPYRIGHT') &copy; 2019-{{ date("Y",time()) }} <a href="{{ url('/admin') }}">@lang('admin.TITLE_SITE_BEGIN')@lang('admin.TITLE_SITE_END')</a>.</strong> @lang('admin.TITLE_SITE_RIGHTS')
   </footer>
+  <?php 
+    $is_updated = '1';
+  ?>
 </div>
+
+@section('models') 
+@include('admin.users.change-password-model')
+@show
+
+
 <!-- ./wrapper -->
+<script>
+  var is_updated = '{{$is_updated}}';
+  if(is_updated == "0")
+  {
+    $("#changePasswordfrm").click();
+    $('#changePasswordfrm').modal({backdrop: 'static', keyboard: false});  
+  }
+</script>
 <!-- jQuery -->
 <script src="{{ asset('assets/admin-lte/plugins/jquery/jquery.min.js') }}"></script>
 <!-- jQuery UI 1.11.4 -->

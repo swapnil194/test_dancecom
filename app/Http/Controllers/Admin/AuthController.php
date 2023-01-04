@@ -5,6 +5,10 @@ use Illuminate\Http\Request;
 use App\Http\Requests\Admin\Auth\LoginRequest;
 use Illuminate\Support\Facades\Lang;
 use App\Models\AdminUserModel;
+
+//Request
+use App\Http\Requests\Admin\UserUpdatePasswordRequest;
+
 use App;
 use DB;
 use Hash;
@@ -256,5 +260,58 @@ class AuthController extends Controller
        $this->JsonData['status'] = __('admin.RESP_SUCCESS');
        $this->JsonData['msg'] = __('admin.CHANGE_LANGUAGE_STATUS');
        return response()->json($this->JsonData);
+    }
+
+    public function updatePassword(UserUpdatePasswordRequest $request)
+    {
+        $new_pasword = $request->password;
+        if (!empty($new_pasword)) 
+        {
+            $collection = $this->BaseModel
+            ->where('id', auth()->user()->id)
+            ->where('email', auth()->user()->email)
+            ->first();
+            if (!empty($collection)) 
+            {
+                if (Hash::check($request->old_password, $collection->password))        
+                {
+                    $collection->password       = Hash::make($new_pasword);
+                    //$collection->str_password   = $new_pasword;
+                    $collection->is_updated   = '1';
+                    if($collection->save())
+                    {   
+                        Session::put('is_updated','1');
+                        $this->JsonData['status'] = __('admin.RESP_SUCCESS');
+                        $this->JsonData['msg'] = __('admin.CHANGE_PASSWORD_STATUS');
+                        $this->JsonData['url'] = url('admin/dashboard');
+                    }
+                    else
+                    {
+                        $this->JsonData['status'] = __('admin.RESP_ERROR');
+                        $this->JsonData['msg'] = __('admin.FAIL_CHANGE_PASSWORD_STATUS');
+                    }
+                }
+                else
+                {
+                    //$this->JsonData['url'] = url('admin/doctor-dashboard');
+                    $this->JsonData['status'] = __('admin.RESP_ERROR');
+                    $this->JsonData['msg'] = __('admin.FAIL_CHANGE_PASSWORD_MATCH');
+                }
+            }
+            else
+            {
+                //$this->JsonData['url'] = url('admin/doctor-dashboard');
+                $this->JsonData['status'] = __('admin.RESP_ERROR');
+                $this->JsonData['msg'] = __('admin.ERR_SESSION_TIMEOUT');
+            }
+        }
+        else
+        {
+            //$this->JsonData['url'] = url('/');
+            $this->JsonData['status'] = __('admin.RESP_ERROR');
+            $this->JsonData['msg'] = __('admin.ERR_CHANGE_PASSWORD_NEW');
+        }
+        //dd($this->JsonData);
+        return response()->json($this->JsonData);
     }
 }
