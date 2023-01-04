@@ -8,6 +8,7 @@
       <p class="login-box-msg">@lang('admin.TITLE_LOGIN_HEADING')</p>
       <form id='loginForm' method="post" action="{{ route('admin.check_login')}}" data-toggle="validator">
          {{ csrf_field() }}
+         
          <div class="form-group  has-feedback">
             <span class="glyphicon glyphicon-envelope form-control-feedback"></span> 
             <div class="input-group mb-1">
@@ -30,6 +31,7 @@
                </ul>
             </span>
          </div>
+
          <div class="form-group has-feedback">
             <span class="glyphicon glyphicon-lock form-control-feedback"></span>  
             <div class="input-group mb-1">
@@ -80,7 +82,7 @@
                            value='+43'
                            maxlength="5" 
                            pattern="(\+[0-9]+|0[0-9]+|00[0-9]+)"
-                           data-error="@lang('admin.ERR_COUNTRY_CODE_REQUIRED')"
+                            data-error="@lang('admin.ERR_COUNTRY_CODE_REQUIRED')"
                            data-pattern-error ="@lang('admin.ERR_COUNTRY_CODE_WRONG')">
                      </div>
                      <span class="help-block invalid-feedback with-errors" >

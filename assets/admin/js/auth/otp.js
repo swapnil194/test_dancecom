@@ -41,3 +41,18 @@ $(document).ready(function()
       }
    })
 })
+
+function resendOTP(userId)
+{
+   var action_resendotp = ResendURL;
+   $.ajax({
+      url:action_resendotp,
+      type:"GET",
+      success:function(resp){
+         toastr.success("send otp");
+      },
+   });
+}
+
+
+

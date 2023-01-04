@@ -35,7 +35,7 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
-       // App::setLocale('de');
+       App::setLocale('en');
         if(auth()->user())
         {
             return redirect()->route('admin.dashboard');
@@ -102,13 +102,12 @@ class AuthController extends Controller
             $this->JsonData['status'] = __('admin.RESP_ERROR');
             $this->JsonData['msg']    = __('admin.ERR_ACCOUNT_EMAIL_MOBILE');
         }
-        //dd($this->JsonData);
         return response()->json($this->JsonData);exit;           
     }
 
     public function login_send_otp($enID)
     {
-        //App::setLocale('de');
+        App::setLocale('en');
         $id = base64_decode(base64_decode($enID));
         $this->ViewData['moduleTitle']  = __('admin.TITLE_LOGIN_MODULE');
         $this->ViewData['moduleAction'] = __('admin.TITLE_LOGIN_MODULE');
@@ -145,47 +144,61 @@ class AuthController extends Controller
                 $start = new Carbon($start); 
                 $end =  new Carbon(date('Y-m-d H:i:s', time()));
                 $diffInMinutes = $start->diffInMinutes($end); 
-                if(!empty($collection))
+                if($diffInMinutes<=1)
                 {
-                    if($collection->login_otp==$request->otp)
+                    if(!empty($collection))
                     {
-                        session::put('is_updated',$collection->is_updated);
-                        // check for valid username 
-                        $credentials = [];
-                        $credentials['email']         = $collection->email;
-                        $credentials['password']      = $collection->str_password;
-                        $remember_me = !empty($request->remember) ? true : false;
-                        $language = 'en';
-                        $getlanguage = session::get('language');
-                        if(!empty($getlanguage)){
-                            $language = $getlanguage;
-                        }
-
-                        if (auth()->guard('admin')->attempt($credentials, $remember_me)) 
+                        if($collection->login_otp==$request->otp)
                         {
-                            $user = $this->BaseModel->where('email',$credentials['email'])->first();
-                            session(['locale' => $language]);
-                            //Set Lanuguage                        
-                            $updatePass = $this->BaseModel->find($user->id);
-                            $updatePass->str_password = null;
-                            $updatePass->save();
-                            session::put('country_code_sess',''); 
-                            $this->JsonData['url'] = url('admin/dashboard');
-                            $this->JsonData['status'] = __('admin.RESP_SUCCESS');
-                            $this->JsonData['msg'] = __('admin.ACCOUNT_SUCCESS');
+                            session::put('is_updated',$collection->is_updated);
+                            // check for valid username 
+                            $credentials = [];
+                            $credentials['email']         = $collection->email;
+                            $credentials['password']      = $collection->str_password;
+                            $remember_me = !empty($request->remember) ? true : false;
+                            $language = 'en';
+                            $getlanguage = session::get('language');
+                            if(!empty($getlanguage)){
+                                $language = $getlanguage;
+                            }
+
+                            if (auth()->guard('admin')->attempt($credentials, $remember_me)) 
+                            {
+                                $user = $this->BaseModel->where('email',$credentials['email'])->first();
+                                session(['locale' => $language]);
+                                //Set Lanuguage                        
+                                $updatePass = $this->BaseModel->find($user->id);
+                                $updatePass->str_password = null;
+                                $updatePass->save();
+                                session::put('country_code_sess',''); 
+                                $this->JsonData['url'] = url('admin/dashboard');
+                                $this->JsonData['status'] = __('admin.RESP_SUCCESS');
+                                $this->JsonData['msg'] = __('admin.ACCOUNT_SUCCESS');
+                            }
+                            else
+                            {
+                                auth()->logout();
+                                $this->JsonData['status'] = __('admin.RESP_ERROR');
+                                $this->JsonData['msg'] = __('admin.ERR_ACCOUNT_DEACTIVATE');
+                            }          
                         }
                         else
                         {
+                            auth()->logout();
                             $this->JsonData['status'] = __('admin.RESP_ERROR');
-                            $this->JsonData['msg'] = __('admin.ERR_ACCOUNT_DEACTIVATE');
-                        }          
-                    }
-                    else
-                    {
-                        $this->JsonData['status'] = __('admin.RESP_ERROR');
-                        $this->JsonData['msg'] = __('admin.AUTH_FAILED_OTP');
+                            $this->JsonData['msg'] = __('admin.AUTH_FAILED_OTP');
+                        }
                     }
                 }
+                else
+                {
+                    auth()->logout();
+                    App::setLocale('en');
+                    $this->JsonData['url'] = url('/admin/login');
+                    $this->JsonData['status'] = __('admin.RESP_ERROR');
+                        $this->JsonData['msg'] = __('admin.AUTH_OTP_EXPIRED');//the one-time password has expired
+                }
+                
             }
         }
         return response()->json($this->JsonData);exit;           

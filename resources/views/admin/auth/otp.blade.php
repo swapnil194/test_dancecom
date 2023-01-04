@@ -49,5 +49,6 @@
 <script type="text/javascript" src="{{ asset('assets/admin/js/auth/otp.js') }}"></script>
 <script type="text/javascript">
    var URL =  '{{url("/admin/dashboard/")}}';
+   const ResendURL = "{{ url('admin/resendOtp',$user_id) }}";
 </script>
 @endsection
