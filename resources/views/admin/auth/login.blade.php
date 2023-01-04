@@ -66,6 +66,7 @@
                            id="country_code"
                            onchange="this.nextElementSibling.value=this.value">
                            <option value="+43">+43</option>
+                           <option value="+91">+91</option>
                            <option value="0043">0043</option>
                            <option value="0">0</option>
                         </select>

@@ -60,7 +60,7 @@ class AuthController extends Controller
         $getUsersDetails = $this->BaseModel
        ->where('email',$request->email)
        ->where('mobile_number',$mobile_no)
-       //->where('country_code',$request->format)
+       ->where('country_code',$request->format)
        ->first();
         session::put('country_code_sess',$request->format); 
 
@@ -230,7 +230,6 @@ class AuthController extends Controller
                 $country_code = '43'; //Austria country code
             }
             $country_code = str_replace("+", "",$country_code);
-            //dd($collection);
             $phone   = $country_code."".str_replace("-", "",$collection->mobile_number);
             $message = 'Hallo '.$collection->family_name.', lhr Login-Code für die PUREGYN-App lautet '.$otp_code.'. Er ist 5 Minuten gültig.';
             $collection->login_otp = $otp_code;
@@ -248,7 +247,6 @@ class AuthController extends Controller
 
     public function updateLanguage(Request $request)
     {
-        // dd($request->all());
         $this->JsonData['status'] = __('admin.RESP_ERROR');
         $this->JsonData['msg'] = __('admin.FAIL_LANGUAGE_STATUS');
         $lang = 'de';
