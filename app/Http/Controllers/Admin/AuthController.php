@@ -276,7 +276,6 @@ class AuthController extends Controller
                 if (Hash::check($request->old_password, $collection->password))        
                 {
                     $collection->password       = Hash::make($new_pasword);
-                    //$collection->str_password   = $new_pasword;
                     $collection->is_updated   = '1';
                     if($collection->save())
                     {   
@@ -293,25 +292,21 @@ class AuthController extends Controller
                 }
                 else
                 {
-                    //$this->JsonData['url'] = url('admin/doctor-dashboard');
                     $this->JsonData['status'] = __('admin.RESP_ERROR');
                     $this->JsonData['msg'] = __('admin.FAIL_CHANGE_PASSWORD_MATCH');
                 }
             }
             else
             {
-                //$this->JsonData['url'] = url('admin/doctor-dashboard');
                 $this->JsonData['status'] = __('admin.RESP_ERROR');
                 $this->JsonData['msg'] = __('admin.ERR_SESSION_TIMEOUT');
             }
         }
         else
         {
-            //$this->JsonData['url'] = url('/');
             $this->JsonData['status'] = __('admin.RESP_ERROR');
             $this->JsonData['msg'] = __('admin.ERR_CHANGE_PASSWORD_NEW');
         }
-        //dd($this->JsonData);
         return response()->json($this->JsonData);
     }
 }
